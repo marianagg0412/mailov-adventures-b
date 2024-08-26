@@ -1,0 +1,300 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Pet {
+  id: ID!
+  name: String!
+  type: String!
+  hungerLevel: Int!
+  happinessLevel: Int!
+  lastFed: String!
+  partnership: Partnership!
+}
+
+type Restaurant {
+  id: ID!
+  partnership: Partnership!
+  name: String!
+  location: String!
+  cuisineType: String!
+  dateAdded: String!
+  extra: String!
+  visited: Boolean!
+}
+
+type Question {
+  id: ID!
+  user: User!
+  questionText: String!
+  category: String!
+  answer: String
+  dateAsked: String!
+  partnership: Partnership!
+}
+
+type Movie {
+  id: ID!
+  title: String!
+  genre: String!
+  priority: String!
+  partnership: Partnership!
+}
+
+type DateIdea {
+  id: ID!
+  user: User!
+  idea: String!
+  category: String!
+  review: String
+  dateAdded: String!
+  enthusiasm: Int!
+  done: Boolean!
+  partnership: Partnership
+}
+
+type Activity {
+  id: ID!
+  activityType: String!
+  pointsEarned: Int!
+  date: String!
+  user: User!
+  partnership: Partnership!
+}
+
+type Partnership {
+  id: ID!
+  user1: User!
+  user2: User!
+  startDate: String!
+  status: String!
+  sharedPoints: Int
+  pets: [Pet!]
+  users: [User!]
+  questions: [Question!]
+  restaurants: [Restaurant!]
+  movies: [Movie!]
+  dateIdeas: [DateIdea!]
+  activities: [Activity!]
+}
+
+type Fact {
+  id: ID!
+  user: User!
+  fact: String!
+  dateAdded: String!
+  importance: Int!
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  password: String!
+  points: Int!
+  partnership: Partnership
+  facts: [Fact!]!
+  dateIdeas: [DateIdea!]!
+  questions: [Question!]!
+  activities: [Activity!]
+}
+
+type Query {
+  user(id: Int!): User!
+  fact(id: Int!): Fact!
+  dateIdea(id: Int!): DateIdea!
+  question(id: Int!): Question!
+  pet(id: Int!): Pet!
+  activity(id: Int!): Activity!
+  restaurant(id: Int!): Restaurant!
+  movie(id: Int!): Movie!
+  partnership(id: Int!): Partnership!
+}
+
+type Mutation {
+  createUser(createUserInput: CreateUserInput!): User!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+  removeUser(id: Int!): User!
+  createFact(createFactInput: CreateFactInput!): Fact!
+  updateFact(updateFactInput: UpdateFactInput!): Fact!
+  removeFact(id: Int!): Fact!
+  createDateIdea(createDateIdeaInput: CreateDateIdeaInput!): DateIdea!
+  updateDateIdea(updateDateIdeaInput: UpdateDateIdeaInput!): DateIdea!
+  removeDateIdea(id: Int!): DateIdea!
+  createQuestion(createQuestionInput: CreateQuestionInput!): Question!
+  updateQuestion(updateQuestionInput: UpdateQuestionInput!): Question!
+  removeQuestion(id: Int!): Question!
+  createPet(createPetInput: CreatePetInput!): Pet!
+  updatePet(updatePetInput: UpdatePetInput!): Pet!
+  removePet(id: Int!): Pet!
+  createActivity(createActivityInput: CreateActivityInput!): Activity!
+  updateActivity(updateActivityInput: UpdateActivityInput!): Activity!
+  removeActivity(id: Int!): Activity!
+  createRestaurant(createRestaurantInput: CreateRestaurantInput!): Restaurant!
+  updateRestaurant(updateRestaurantInput: UpdateRestaurantInput!): Restaurant!
+  removeRestaurant(id: Int!): Restaurant!
+  createMovie(createMovieInput: CreateMovieInput!): Movie!
+  updateMovie(updateMovieInput: UpdateMovieInput!): Movie!
+  removeMovie(id: Int!): Movie!
+  createPartnership(createPartnershipInput: CreatePartnershipInput!): Partnership!
+  updatePartnership(updatePartnershipInput: UpdatePartnershipInput!): Partnership!
+  removePartnership(id: Int!): Partnership!
+}
+
+input CreateUserInput {
+  name: String!
+  email: String!
+  password: String!
+  points: Int! = 0
+}
+
+input UpdateUserInput {
+  id: ID!
+  name: String
+  email: String
+  password: String
+  points: Int
+}
+
+input CreateFactInput {
+  userId: Int!
+  fact: String!
+  dateAdded: String!
+  importance: Int!
+}
+
+input UpdateFactInput {
+  id: ID!
+  userId: Int!
+  fact: String
+  dateAdded: String
+  importance: Int
+}
+
+input CreateDateIdeaInput {
+  idea: String!
+  category: String!
+  review: String
+  dateAdded: String!
+  enthusiasm: Int!
+  done: Boolean!
+  userId: Int!
+  partnershipId: Int
+}
+
+input UpdateDateIdeaInput {
+  id: ID!
+  idea: String
+  category: String
+  review: String
+  dateAdded: String
+  enthusiasm: Int
+  done: Boolean
+  userId: Int
+  partnershipId: Int
+}
+
+input CreateQuestionInput {
+  questionText: String!
+  category: String!
+  answer: String
+  dateAsked: String!
+  partnershipId: Int!
+}
+
+input UpdateQuestionInput {
+  id: ID!
+  questionText: String
+  category: String
+  answer: String
+  dateAsked: String
+  partnershipId: Int
+}
+
+input CreatePetInput {
+  name: String!
+  type: String!
+  hungerLevel: Int!
+  happinessLevel: Int!
+  lastFed: String!
+  partnershipId: Float!
+}
+
+input UpdatePetInput {
+  id: ID!
+  name: String
+  type: String
+  hungerLevel: Int
+  happinessLevel: Int
+  lastFed: String
+  partnershipId: Int!
+}
+
+input CreateActivityInput {
+  activityType: String!
+  pointsEarned: Int!
+  date: String!
+  userId: Int!
+  partnershipId: Int!
+}
+
+input UpdateActivityInput {
+  id: ID!
+  activityType: String
+  pointsEarned: Int
+  date: String
+  userId: Int
+  partnershipId: Int
+}
+
+input CreateRestaurantInput {
+  name: String!
+  location: String!
+  cuisineType: String!
+  dateAdded: String!
+  extra: String!
+  visited: Boolean!
+  partnershipId: Int!
+}
+
+input UpdateRestaurantInput {
+  id: ID!
+  name: String
+  location: String
+  cuisineType: String
+  dateAdded: String
+  extra: String
+  visited: Boolean
+  partnershipId: Int
+}
+
+input CreateMovieInput {
+  title: String!
+  genre: String!
+  priority: String!
+  partnershipId: Int!
+}
+
+input UpdateMovieInput {
+  id: ID!
+  title: String
+  genre: String
+  priority: String
+  partnershipId: Int
+}
+
+input CreatePartnershipInput {
+  user1Id: Int!
+  user2Id: Int!
+  startDate: String!
+  status: String!
+}
+
+input UpdatePartnershipInput {
+  id: ID!
+  user1Id: Int
+  user2Id: Int
+  startDate: String
+  status: String
+  sharedPoints: Int
+}

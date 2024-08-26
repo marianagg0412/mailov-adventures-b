@@ -1,5 +1,13 @@
-# compiled output
+# Environment files
+.env
+.env.*.local
+
+# Compiled output
 /dist
+/.build
+/.cache
+
+# Node modules
 /node_modules
 
 # Logs
@@ -11,8 +19,9 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
-# OS
+# OS-specific files
 .DS_Store
+Thumbs.db
 
 # Tests
 /coverage
@@ -33,3 +42,18 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+.vscode/.history/
+.vscode/.workspaceStorage/
+
+# TypeScript
+*.tsbuildinfo
+
+# Misc
+*.tgz
+*.swp
+*.swo
+*.swn
+
+# Build and deployment
+build/
+tmp/
