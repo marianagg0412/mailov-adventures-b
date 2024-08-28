@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int, ID } from '@nestjs/graphql';
 import { DateIdeaService } from './date-idea.service';
 import { DateIdea } from './entities/date-idea.entity';
 import { CreateDateIdeaInput } from './dto/create-date-idea.input';
@@ -19,17 +19,20 @@ export class DateIdeaResolver {
   }
 
   @Query(() => DateIdea, { name: 'dateIdea' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  findOne(@Args('id', { type: () => ID }) id: number) {
     return this.dateIdeaService.findOne(id);
   }
 
   @Mutation(() => DateIdea)
-  updateDateIdea(@Args('updateDateIdeaInput') updateDateIdeaInput: UpdateDateIdeaInput) {
-    return this.dateIdeaService.update(updateDateIdeaInput.id, updateDateIdeaInput);
+  updateDateIdea(
+    @Args('id', { type: () => ID }) id: number,
+    @Args('updateDateIdeaInput') updateDateIdeaInput: UpdateDateIdeaInput) {
+    return this.dateIdeaService.update(id, updateDateIdeaInput);
   }
 
-  @Mutation(() => DateIdea)
-  removeDateIdea(@Args('id', { type: () => Int }) id: number) {
-    return this.dateIdeaService.remove(id);
+  @Mutation(() => Boolean)
+  async removeDateIdea(@Args('id', { type: () => ID }) id: number) {
+    this.dateIdeaService.remove(id);
+    return true;
   }
 }

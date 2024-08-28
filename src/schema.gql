@@ -18,7 +18,7 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type Restaurant {
-  id: Int!
+  id: ID!
   partnerships: [Partnership]!
   name: String!
   location: String!
@@ -42,7 +42,7 @@ type Movie {
   id: ID!
   title: String!
   genre: String!
-  priority: String!
+  priority: String
   partnerships: [Partnership!]!
 }
 
@@ -111,13 +111,14 @@ type AuthResponseDto {
 type Query {
   findAllUsers: [User!]!
   findUserById(id: Int!): User!
-  fact(id: Int!): Fact!
+  facts: [Fact!]!
+  fact(id: ID!): Fact!
   dateIdeas: [DateIdea!]!
-  dateIdea(id: Int!): DateIdea!
+  dateIdea(id: ID!): DateIdea!
   questions: [Question!]!
-  question(id: Int!): Question!
+  question(id: ID!): Question!
   pets: [Pet!]!
-  pet(id: Int!): Pet!
+  pet(id: ID!): Pet!
   activities: [Activity!]!
   activity(id: Int!): Activity!
   restaurants: [Restaurant!]!
@@ -133,26 +134,26 @@ type Mutation {
   updateUser(updateUserInput: UpdateUserInput!): User!
   removeUser(id: Int!): Boolean!
   createFact(createFactInput: CreateFactInput!): Fact!
-  updateFact(updateFactInput: UpdateFactInput!): Fact!
-  removeFact(id: Int!): Fact!
+  updateFact(id: ID!, updateFactInput: UpdateFactInput!): Fact!
+  removeFact(id: ID!): Boolean!
   createDateIdea(createDateIdeaInput: CreateDateIdeaInput!): DateIdea!
-  updateDateIdea(updateDateIdeaInput: UpdateDateIdeaInput!): DateIdea!
-  removeDateIdea(id: Int!): DateIdea!
+  updateDateIdea(id: ID!, updateDateIdeaInput: UpdateDateIdeaInput!): DateIdea!
+  removeDateIdea(id: ID!): Boolean!
   createQuestion(createQuestionInput: CreateQuestionInput!): Question!
-  updateQuestion(updateQuestionInput: UpdateQuestionInput!): Question!
-  removeQuestion(id: Int!): Boolean!
+  updateQuestion(id: ID!, updateQuestionInput: UpdateQuestionInput!): Question!
+  removeQuestion(id: ID!): Boolean!
   createPet(createPetInput: CreatePetInput!): Pet!
-  updatePet(updatePetInput: UpdatePetInput!): Pet!
-  removePet(id: Int!): Pet!
+  updatePet(id: ID!, updatePetInput: UpdatePetInput!): Pet!
+  removePet(id: ID!): Boolean!
   createActivity(createActivityInput: CreateActivityInput!): Activity!
-  updateActivity(updateActivityInput: UpdateActivityInput!): Activity!
-  removeActivity(id: Int!): Activity!
+  updateActivity(id: ID!, updateActivityInput: UpdateActivityInput!): Activity!
+  removeActivity(id: ID!): Boolean!
   createRestaurant(createRestaurantInput: CreateRestaurantInput!): Restaurant!
   updateRestaurant(id: Int!, updateRestaurantInput: UpdateRestaurantInput!): Restaurant!
   removeRestaurant(id: Int!): Boolean!
   createMovie(createMovieInput: CreateMovieInput!): Movie!
-  updateMovie(updateMovieInput: UpdateMovieInput!): Movie!
-  removeMovie(id: Int!): Movie!
+  updateMovie(id: ID!, updateMovieInput: UpdateMovieInput!): Movie!
+  removeMovie(id: ID!): Boolean!
   createPartnership(createPartnershipInput: CreatePartnershipInput!): Partnership!
   updatePartnership(id: ID!, updatePartnershipInput: UpdatePartnershipInput!): Partnership!
   removePartnership(id: Int!): Boolean!
@@ -178,13 +179,11 @@ input UpdateUserInput {
 input CreateFactInput {
   userId: Int!
   fact: String!
-  dateAdded: String!
-  importance: Int!
+  importance: Float
 }
 
 input UpdateFactInput {
-  id: ID!
-  userId: Int!
+  userId: Int
   fact: String
   dateAdded: String
   importance: Int
@@ -194,15 +193,13 @@ input CreateDateIdeaInput {
   idea: String!
   category: String!
   review: String
-  dateAdded: String!
   enthusiasm: Int!
-  done: Boolean!
+  done: Boolean = false
   userId: Int!
-  partnershipId: Int!
+  partnershipIds: [Int!]
 }
 
 input UpdateDateIdeaInput {
-  id: ID!
   idea: String
   category: String
   review: String
@@ -210,61 +207,54 @@ input UpdateDateIdeaInput {
   enthusiasm: Int
   done: Boolean
   userId: Int
-  partnershipId: Int
+  partnershipIds: [Int!]
 }
 
 input CreateQuestionInput {
   questionText: String!
   category: String!
   answer: String
-  dateAsked: String!
   userId: Int!
-  partnershipId: Int!
+  partnershipIds: [Int!]
 }
 
 input UpdateQuestionInput {
-  id: ID!
   questionText: String
   category: String
   answer: String
-  dateAsked: String
-  partnershipId: Int
+  dateAsked: DateTime
+  partnershipIds: [Int!]
 }
 
 input CreatePetInput {
   name: String!
   type: String!
-  hungerLevel: Int!
-  happinessLevel: Int!
-  lastFed: DateTime!
   partnershipId: Float!
 }
 
 input UpdatePetInput {
-  id: ID!
   name: String
   type: String
   hungerLevel: Int
   happinessLevel: Int
   lastFed: DateTime
-  partnershipId: Int!
+  partnershipId: Int
 }
 
 input CreateActivityInput {
   activityType: String!
-  pointsEarned: Int!
-  date: String!
+  pointsEarned: Int = 0
+  date: String
   userId: Int!
-  partnershipId: Int!
+  partnershipIds: [Int!]
 }
 
 input UpdateActivityInput {
-  id: ID!
   activityType: String
   pointsEarned: Int
   date: String
   userId: Int
-  partnershipId: Int
+  partnershipIds: [Int!]
 }
 
 input CreateRestaurantInput {
@@ -288,16 +278,15 @@ input UpdateRestaurantInput {
 input CreateMovieInput {
   title: String!
   genre: String!
-  priority: String!
-  partnershipId: Int!
+  priority: String
+  partnershipIds: [Int!]
 }
 
 input UpdateMovieInput {
-  id: ID!
   title: String
   genre: String
   priority: String
-  partnershipId: Int
+  partnershipIds: [Int!]
 }
 
 input CreatePartnershipInput {

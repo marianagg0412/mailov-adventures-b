@@ -1,5 +1,5 @@
 import { InputType, Field, Int } from '@nestjs/graphql';
-import { IsString, IsInt, IsOptional, IsBoolean } from 'class-validator';
+import { IsString, IsInt, IsOptional, IsBoolean, IsArray } from 'class-validator';
 
 @InputType()
 export class CreateDateIdeaInput {
@@ -16,23 +16,21 @@ export class CreateDateIdeaInput {
   @IsString()
   review?: string;
 
-  @Field()
-  @IsString()
-  dateAdded: string;
-
   @Field(() => Int)
   @IsInt()
   enthusiasm: number;
 
-  @Field()
+  @Field({ nullable: true, defaultValue: false })
   @IsBoolean()
-  done: boolean;
+  @IsOptional()
+  done?: boolean;
 
   @Field(() => Int)
   @IsInt()
   userId: number;  // Proposed by user
 
-  @Field(() => Int, { nullable: false })
-  @IsInt()
-  partnershipId: number;  // Executed by partnership (optional)
+  @Field(() => [Int], { nullable: true })
+  @IsArray()
+  @IsOptional()
+  partnershipIds?: number[];
 }

@@ -3,12 +3,10 @@ import { IsString, IsOptional, IsInt } from 'class-validator';
 
 @InputType()
 export class UpdateFactInput {
-  @Field(() => ID)
-  id: number;
-
-  @Field(() => Int)
+  @Field(() => Int, { nullable: true }) // Make userId optional
+  @IsOptional()
   @IsInt()
-  userId: number;  // Still required for linking to User
+  userId?: number;
 
   @Field({ nullable: true })
   @IsOptional()

@@ -18,8 +18,8 @@ export class Movie {
   genre: string;
 
   @Column({ default: 'low' }) // Default priority value
-  @Field()
-  priority: string;
+  @Field({ nullable: true })
+  priority?: string;
 
   @ManyToMany(() => Partnership, (partnership) => partnership.movies)
   @Field(() => [Partnership])

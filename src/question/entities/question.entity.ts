@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinTable, ManyToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinTable, ManyToMany, CreateDateColumn } from 'typeorm';
 import { ObjectType, Field, ID } from '@nestjs/graphql';
 import { User } from '../../user/entities/user.entity';
 import { Partnership } from '../../partnership/entities/partnership.entity';
@@ -26,9 +26,9 @@ export class Question {
   @Field({ nullable: true })
   answer?: string;
 
-  @Column()
-  @Field()
-  dateAsked: string;
+  @CreateDateColumn({ type: 'timestamp' }) // Automatically set the current date and time
+  @Field(() => String) // or use Date type if you prefer
+  dateAsked: Date;
 
   @ManyToMany(() => Partnership, (partnership) => partnership.questions)
   @Field(() => [Partnership])

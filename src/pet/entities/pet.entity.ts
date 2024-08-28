@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn } from 'typeorm';
 import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
 import { Partnership } from '../../partnership/entities/partnership.entity';
 
@@ -21,11 +21,11 @@ export class Pet {
   @Field(() => Int)
   hungerLevel: number;
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'int', default: 100 })
   @Field(() => Int)
   happinessLevel: number;
 
-  @Column({ type: 'timestamptz' })
+  @CreateDateColumn({ type: 'timestamp' })
   @Field()
   lastFed: Date;
 

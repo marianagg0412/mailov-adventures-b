@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn } from 'typeorm';
 import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
 import { User } from '../../user/entities/user.entity';
 
@@ -17,11 +17,11 @@ export class Fact {
   @Field()
   fact: string;
 
-  @Column()
+  @CreateDateColumn({ type: 'timestamp' })
   @Field()
   dateAdded: string;
 
-  @Column('int')
+  @Column({default: 1})
   @Field(() => Int)
   importance: number;
 }

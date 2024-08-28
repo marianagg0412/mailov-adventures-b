@@ -1,5 +1,5 @@
 import { InputType, Field, Int } from '@nestjs/graphql';
-import { IsString, IsInt } from 'class-validator';
+import { IsString, IsInt, IsOptional, IsArray } from 'class-validator';
 
 @InputType()
 export class CreateActivityInput {
@@ -7,19 +7,22 @@ export class CreateActivityInput {
   @IsString()
   activityType: string;
 
-  @Field(() => Int)
+  @Field(() => Int, { nullable: true , defaultValue: 0})
   @IsInt()
-  pointsEarned: number;
+  @IsOptional()
+  pointsEarned?: number;
 
-  @Field()
+  @Field({ nullable: true })
   @IsString()
-  date: string;
+  @IsOptional()
+  date?: string;
 
   @Field(() => Int)
   @IsInt()
   userId: number;  // Proposed by user
 
-  @Field(() => Int)
-  @IsInt()
-  partnershipId: number;  // Executed by partnership
+  @Field(() => [Int], { nullable: true })
+  @IsArray()
+  @IsOptional()
+  partnershipIds?: number[];
 }

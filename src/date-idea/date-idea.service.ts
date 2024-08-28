@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { DateIdea } from './entities/date-idea.entity';
 import { CreateDateIdeaInput } from './dto/create-date-idea.input';
 import { UpdateDateIdeaInput } from './dto/update-date-idea.input';
@@ -19,29 +19,32 @@ export class DateIdeaService {
   ) {}
 
   async create(createDateIdeaInput: CreateDateIdeaInput): Promise<DateIdea> {
-    const { userId, partnershipId, ...rest } = createDateIdeaInput;
-
+    const { userId, partnershipIds = [], ...rest } = createDateIdeaInput;
+  
     const user = await this.userRepository.findOne({ where: { id: userId } });
     if (!user) {
       throw new NotFoundException(`User with ID ${userId} not found.`);
     }
-
-    const partnership = partnershipId
-      ? await this.partnershipRepository.findOne({ where: { id: partnershipId } })
-      : null;
-
-    if (partnershipId && !partnership) {
-      throw new NotFoundException(`Partnership with ID ${partnershipId} not found.`);
+  
+    const partnerships = partnershipIds.length > 0
+      ? await this.partnershipRepository.findBy({ id: In(partnershipIds) })
+      : [];
+  
+    // Check if any provided partnership IDs are invalid
+    const invalidPartnershipIds = partnershipIds.filter(id => !partnerships.find(p => p.id === id));
+    if (invalidPartnershipIds.length > 0) {
+      throw new NotFoundException(`Partnership(s) with ID(s) ${invalidPartnershipIds.join(', ')} not found.`);
     }
-
+  
     const dateIdea = this.dateIdeaRepository.create({
       ...rest,
       user,
-      partnerships: partnership ? [partnership] : [],
+      partnerships,
     });
-
+  
     return this.dateIdeaRepository.save(dateIdea);
   }
+  
 
   async findAll(): Promise<DateIdea[]> {
     return this.dateIdeaRepository.find({ relations: ['user', 'partnerships'] });
@@ -61,14 +64,38 @@ export class DateIdeaService {
   }
 
   async update(id: number, updateDateIdeaInput: UpdateDateIdeaInput): Promise<DateIdea> {
-    const dateIdea = await this.dateIdeaRepository.preload({
-      id,
-      ...updateDateIdeaInput,
+    const dateIdea = await this.dateIdeaRepository.findOne({
+      where: { id },
+      relations: ['user', 'partnerships'], // Ensure related entities are loaded
     });
 
     if (!dateIdea) {
       throw new NotFoundException(`DateIdea with ID ${id} not found.`);
     }
+
+    const { userId, partnershipIds, ...updateData } = updateDateIdeaInput;
+
+    if (userId !== undefined) {
+      const user = await this.userRepository.findOne({ where: { id: userId } });
+      if (!user) {
+        throw new NotFoundException(`User with ID ${userId} not found.`);
+      }
+      dateIdea.user = user;
+    }
+
+    if (partnershipIds !== undefined) {
+      const partnerships = await this.partnershipRepository.findBy({ id: In(partnershipIds) });
+
+      // Check if any provided partnership IDs are invalid
+      const invalidPartnershipIds = partnershipIds.filter(id => !partnerships.find(p => p.id === id));
+      if (invalidPartnershipIds.length > 0) {
+        throw new NotFoundException(`Partnership(s) with ID(s) ${invalidPartnershipIds.join(', ')} not found.`);
+      }
+      dateIdea.partnerships = partnerships;
+    }
+
+    // Merge the rest of the updates from updateDateIdeaInput into the found dateIdea
+    this.dateIdeaRepository.merge(dateIdea, updateData);
 
     return this.dateIdeaRepository.save(dateIdea);
   }

@@ -1,5 +1,5 @@
 import { InputType, Field, Int } from '@nestjs/graphql';
-import { IsString, IsInt } from 'class-validator';
+import { IsString, IsInt, IsOptional } from 'class-validator';
 
 @InputType()
 export class CreateFactInput {
@@ -11,11 +11,8 @@ export class CreateFactInput {
   @IsString()
   fact: string;
 
-  @Field()
-  @IsString()
-  dateAdded: string;
-
-  @Field(() => Int)
+  @Field({ nullable: true })
+  @IsOptional()
   @IsInt()
-  importance: number;
+  importance?: number;
 }

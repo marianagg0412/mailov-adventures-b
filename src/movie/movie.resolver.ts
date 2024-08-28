@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int, ID } from '@nestjs/graphql';
 import { MovieService } from './movie.service';
 import { Movie } from './entities/movie.entity';
 import { CreateMovieInput } from './dto/create-movie.input';
@@ -24,12 +24,15 @@ export class MovieResolver {
   }
 
   @Mutation(() => Movie)
-  updateMovie(@Args('updateMovieInput') updateMovieInput: UpdateMovieInput) {
-    return this.movieService.update(updateMovieInput.id, updateMovieInput);
+  updateMovie(
+    @Args('id', { type: () => ID }) id: number,
+    @Args('updateMovieInput') updateMovieInput: UpdateMovieInput) {
+    return this.movieService.update(id, updateMovieInput);
   }
 
-  @Mutation(() => Movie)
-  removeMovie(@Args('id', { type: () => Int }) id: number) {
-    return this.movieService.remove(id);
+  @Mutation(() => Boolean)
+  async removeMovie(@Args('id', { type: () => ID }) id: number) {
+    await this.movieService.remove(id);
+    return true;
   }
 }

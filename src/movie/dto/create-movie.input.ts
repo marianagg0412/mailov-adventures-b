@@ -1,5 +1,5 @@
 import { InputType, Field, Int } from '@nestjs/graphql';
-import { IsString, IsInt } from 'class-validator';
+import { IsString, IsInt, IsArray, IsOptional } from 'class-validator';
 
 @InputType()
 export class CreateMovieInput {
@@ -11,11 +11,13 @@ export class CreateMovieInput {
   @IsString()
   genre: string;
 
-  @Field()
+  @Field({ nullable: true })
   @IsString()
-  priority: string; // Default: "low"
+  @IsOptional()
+  priority?: string; // Default: "low"
 
-  @Field(() => Int)
-  @IsInt()
-  partnershipId: number;  // Linked to Partnership
+  @Field(() => [Int], { nullable: true })
+  @IsArray()
+  @IsOptional()
+  partnershipIds?: number[];
 }

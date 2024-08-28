@@ -49,16 +49,22 @@ export class PetService {
   }
 
   async update(id: number, updatePetInput: UpdatePetInput): Promise<Pet> {
-    const pet = await this.petRepository.preload({
-      id,
-      ...updatePetInput,
-    });
-
-    if (!pet) {
+    const existingPet = await this.petRepository.findOne({ where: { id } });
+  
+    if (!existingPet) {
       throw new NotFoundException(`Pet with ID ${id} not found.`);
     }
-
-    return this.petRepository.save(pet);
+  
+    if (updatePetInput.partnershipId) {
+      const partnership = await this.partnershipRepository.findOne({ where: { id: updatePetInput.partnershipId } });
+      if (!partnership) {
+        throw new NotFoundException(`Partnership with ID ${updatePetInput.partnershipId} not found.`);
+      }
+      existingPet.partnership = partnership;
+    }
+  
+    const updatedPet = this.petRepository.merge(existingPet, updatePetInput);
+    return this.petRepository.save(updatedPet);
   }
 
   async remove(id: number): Promise<void> {

@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int, ID } from '@nestjs/graphql';
 import { QuestionService } from './question.service';
 import { Question } from './entities/question.entity';
 import { CreateQuestionInput } from './dto/create-question.input';
@@ -21,19 +21,20 @@ export class QuestionResolver {
   }
 
   @Query(() => Question, { name: 'question' })
-  async findOne(@Args('id', { type: () => Int }) id: number): Promise<Question> {
+  async findOne(@Args('id', { type: () => ID }) id: number): Promise<Question> {
     return this.questionService.findOne(id);
   }
 
   @Mutation(() => Question)
   async updateQuestion(
+    @Args('id', { type: () => ID }) id: number,
     @Args('updateQuestionInput') updateQuestionInput: UpdateQuestionInput
   ): Promise<Question> {
-    return this.questionService.update(updateQuestionInput.id, updateQuestionInput);
+    return this.questionService.update(id, updateQuestionInput);
   }
 
   @Mutation(() => Boolean)
-  async removeQuestion(@Args('id', { type: () => Int }) id: number): Promise<boolean> {
+  async removeQuestion(@Args('id', { type: () => ID }) id: number): Promise<boolean> {
     await this.questionService.remove(id);
     return true;
   }

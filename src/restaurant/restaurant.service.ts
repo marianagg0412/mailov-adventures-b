@@ -19,7 +19,7 @@ export class RestaurantService {
     const partnershipIds = createRestaurantInput.partnershipIds;
   
     // Fetch partnerships by their IDs using findBy and In operator
-    const partnerships = partnershipIds.length > 0 
+    const partnerships = (partnershipIds && partnershipIds.length > 0 )
       ? await this.partnershipRepository.findBy({ id: In(partnershipIds) })
       : [];
   

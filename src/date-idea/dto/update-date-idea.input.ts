@@ -1,10 +1,8 @@
 import { InputType, Field, Int, ID } from '@nestjs/graphql';
-import { IsString, IsInt, IsOptional, IsBoolean } from 'class-validator';
+import { IsString, IsInt, IsOptional, IsBoolean, IsArray } from 'class-validator';
 
 @InputType()
 export class UpdateDateIdeaInput {
-  @Field(() => ID)
-  id: number;
 
   @Field({ nullable: true })
   @IsOptional()
@@ -41,8 +39,8 @@ export class UpdateDateIdeaInput {
   @IsInt()
   userId?: number;
 
-  @Field(() => Int, { nullable: true })
+  @Field(() => [Int], { nullable: true })
+  @IsArray()
   @IsOptional()
-  @IsInt()
-  partnershipId?: number;
+  partnershipIds?: number[];
 }

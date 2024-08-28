@@ -14,13 +14,13 @@ export class Activity {
   @Field()
   activityType: string;
 
-  @Column('int')
+  @Column({default: 0})
   @Field(() => Int)
   pointsEarned: number;
 
-  @Column()
+  @Column({nullable: true})
   @Field()
-  date: string;
+  date?: string;
 
   @ManyToOne(() => User, (user) => user.activities)
   @Field(() => User)

@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int, ID } from '@nestjs/graphql';
 import { ActivityService } from './activity.service';
 import { Activity } from './entities/activity.entity';
 import { CreateActivityInput } from './dto/create-activity.input';
@@ -24,12 +24,15 @@ export class ActivityResolver {
   }
 
   @Mutation(() => Activity)
-  updateActivity(@Args('updateActivityInput') updateActivityInput: UpdateActivityInput) {
-    return this.activityService.update(updateActivityInput.id, updateActivityInput);
+  updateActivity(
+    @Args('id', { type: () => ID }) id: number,
+    @Args('updateActivityInput') updateActivityInput: UpdateActivityInput) {
+    return this.activityService.update(id, updateActivityInput);
   }
 
-  @Mutation(() => Activity)
-  removeActivity(@Args('id', { type: () => Int }) id: number) {
-    return this.activityService.remove(id);
+  @Mutation(() => Boolean)
+  async removeActivity(@Args('id', { type: () => ID }) id: number) {
+    await this.activityService.remove(id);
+    return true;
   }
 }

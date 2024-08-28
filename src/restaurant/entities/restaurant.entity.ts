@@ -6,7 +6,7 @@ import { Partnership } from '../../partnership/entities/partnership.entity';
 @ObjectType()
 export class Restaurant {
   @PrimaryGeneratedColumn()
-  @Field(() => Int)
+  @Field(() => ID)
   id: number;
 
   @ManyToMany(() => Partnership, (partnership) => partnership.restaurants)

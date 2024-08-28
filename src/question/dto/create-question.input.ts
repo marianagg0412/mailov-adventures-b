@@ -1,5 +1,5 @@
 import { InputType, Field, Int } from '@nestjs/graphql';
-import { IsString, IsOptional, IsInt } from 'class-validator';
+import { IsString, IsOptional, IsInt, IsArray } from 'class-validator';
 
 @InputType()
 export class CreateQuestionInput {
@@ -16,15 +16,12 @@ export class CreateQuestionInput {
   @IsString()
   answer?: string;
 
-  @Field()
-  @IsString()
-  dateAsked: string;
-
   @Field(() => Int)
   @IsInt()
   userId: number;
 
-  @Field(() => Int)
-  @IsInt()
-  partnershipId: number;  // Linked to Partnership
+  @Field(() => [Int], { nullable: true })
+  @IsArray()
+  @IsOptional()
+  partnershipIds?: number[];
 }

@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinTable, ManyToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinTable, ManyToMany, CreateDateColumn } from 'typeorm';
 import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
 import { User } from '../../user/entities/user.entity';
 import { Partnership } from '../../partnership/entities/partnership.entity';
@@ -26,7 +26,7 @@ export class DateIdea {
   @Field({ nullable: true })
   review?: string;
 
-  @Column()
+  @CreateDateColumn({ type: 'timestamp' })
   @Field()
   dateAdded: string;
 

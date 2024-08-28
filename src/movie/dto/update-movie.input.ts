@@ -1,11 +1,8 @@
 import { InputType, Field, ID, Int } from '@nestjs/graphql';
-import { IsString, IsOptional, IsInt } from 'class-validator';
+import { IsString, IsOptional, IsInt, IsArray } from 'class-validator';
 
 @InputType()
 export class UpdateMovieInput {
-  @Field(() => ID)
-  id: number;
-
   @Field({ nullable: true })
   @IsOptional()
   @IsString()
@@ -21,8 +18,8 @@ export class UpdateMovieInput {
   @IsString()
   priority?: string;
 
-  @Field(() => Int, { nullable: true })
+  @Field(() => [Int], { nullable: true })
+  @IsArray()
   @IsOptional()
-  @IsInt()
-  partnershipId?: number;
+  partnershipIds?: number[];
 }

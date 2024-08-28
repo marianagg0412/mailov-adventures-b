@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int, ID } from '@nestjs/graphql';
 import { FactService } from './fact.service';
 import { Fact } from './entities/fact.entity';
 import { CreateFactInput } from './dto/create-fact.input';
@@ -13,23 +13,26 @@ export class FactResolver {
     return this.factService.create(createFactInput);
   }
 
-  @Query(() => [Fact], { name: 'fact' })
+  @Query(() => [Fact], { name: 'facts' })
   findAll() {
     return this.factService.findAll();
   }
 
   @Query(() => Fact, { name: 'fact' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  findOne(@Args('id', { type: () => ID }) id: number) {
     return this.factService.findOne(id);
   }
 
   @Mutation(() => Fact)
-  updateFact(@Args('updateFactInput') updateFactInput: UpdateFactInput) {
-    return this.factService.update(updateFactInput.id, updateFactInput);
+  updateFact(
+    @Args('id', { type: () => ID }) id: number,
+    @Args('updateFactInput') updateFactInput: UpdateFactInput) {
+    return this.factService.update(id, updateFactInput);
   }
 
-  @Mutation(() => Fact)
-  removeFact(@Args('id', { type: () => Int }) id: number) {
-    return this.factService.remove(id);
+  @Mutation(() => Boolean)
+  async removeFact(@Args('id', { type: () => ID }) id: number) {
+    await this.factService.remove(id);
+    return true;
   }
 }

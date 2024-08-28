@@ -11,18 +11,6 @@ export class CreatePetInput {
   @IsString()
   type: string;
 
-  @Field(() => Int)
-  @IsInt()
-  hungerLevel: number;
-
-  @Field(() => Int)
-  @IsInt()
-  happinessLevel: number;
-
-  @Field()
-  @IsDate()
-  lastFed: Date;
-
   @Field()
   @IsInt()
   partnershipId: number;  // Linking to Partnership

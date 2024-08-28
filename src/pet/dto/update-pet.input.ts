@@ -3,8 +3,6 @@ import { IsString, IsInt, IsOptional, IsDate } from 'class-validator';
 
 @InputType()
 export class UpdatePetInput {
-  @Field(() => ID)
-  id: number;
 
   @Field({ nullable: true })
   @IsOptional()
@@ -31,7 +29,7 @@ export class UpdatePetInput {
   @IsDate()
   lastFed?: Date;
 
-  @Field(() => Int)
+  @Field(() => Int, { nullable: true })
   @IsInt()
   @IsOptional()
   partnershipId?: number;

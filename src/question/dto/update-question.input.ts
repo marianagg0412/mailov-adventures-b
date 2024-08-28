@@ -1,11 +1,8 @@
 import { InputType, Field, ID, Int } from '@nestjs/graphql';
-import { IsString, IsOptional, IsInt } from 'class-validator';
+import { IsString, IsOptional, IsInt, IsArray } from 'class-validator';
 
 @InputType()
 export class UpdateQuestionInput {
-  @Field(() => ID)
-  id: number;
-
   @Field({ nullable: true })
   @IsOptional()
   @IsString()
@@ -24,14 +21,10 @@ export class UpdateQuestionInput {
   @Field({ nullable: true })
   @IsOptional()
   @IsString()
-  dateAsked?: string;
+  dateAsked?: Date;
 
-  @Field(() => Int, { nullable: true })
+  @Field(() => [Int], { nullable: true })
+  @IsArray()
   @IsOptional()
-  @IsInt()
-  partnershipId?: number;
+  partnershipIds?: number[];
 }
-
-// @InputType()
-// export class UpdateQuestionInput extends PartialType(CreateQuestionInput){}
-
