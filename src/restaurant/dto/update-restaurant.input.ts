@@ -41,3 +41,6 @@ export class UpdateRestaurantInput {
   @IsInt()
   partnershipId?: number;
 }
+
+// @InputType()
+// export class UpdateRestaurantInput extends PartialType(CreateRestaurantInput) {}

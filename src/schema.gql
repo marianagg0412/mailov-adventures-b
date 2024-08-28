@@ -14,7 +14,7 @@ type Pet {
 
 type Restaurant {
   id: ID!
-  partnership: Partnership!
+  partnerships: [Partnership!]!
   name: String!
   location: String!
   cuisineType: String!
@@ -30,7 +30,7 @@ type Question {
   category: String!
   answer: String
   dateAsked: String!
-  partnership: Partnership!
+  partnerships: [Partnership!]!
 }
 
 type Movie {
@@ -38,7 +38,7 @@ type Movie {
   title: String!
   genre: String!
   priority: String!
-  partnership: Partnership!
+  partnerships: [Partnership!]!
 }
 
 type DateIdea {
@@ -50,7 +50,7 @@ type DateIdea {
   dateAdded: String!
   enthusiasm: Int!
   done: Boolean!
-  partnership: Partnership
+  partnerships: [Partnership!]!
 }
 
 type Activity {
@@ -59,7 +59,7 @@ type Activity {
   pointsEarned: Int!
   date: String!
   user: User!
-  partnership: Partnership!
+  partnerships: [Partnership!]!
 }
 
 type Partnership {
@@ -70,7 +70,6 @@ type Partnership {
   status: String!
   sharedPoints: Int
   pets: [Pet!]
-  users: [User!]
   questions: [Question!]
   restaurants: [Restaurant!]
   movies: [Movie!]
@@ -92,11 +91,12 @@ type User {
   email: String!
   password: String!
   points: Int!
-  partnership: Partnership
   facts: [Fact!]!
   dateIdeas: [DateIdea!]!
   questions: [Question!]!
   activities: [Activity!]
+  partnershipsAsUser1: [Partnership!]
+  partnershipsAsUser2: [Partnership!]
 }
 
 type Query {

@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, JoinTable, ManyToMany } from 'typeorm';
 import { ObjectType, Field, ID, Int } from '@nestjs/graphql';
 import { Partnership } from '../../partnership/entities/partnership.entity';
 
@@ -21,7 +21,8 @@ export class Movie {
   @Field()
   priority: string;
 
-  @ManyToOne(() => Partnership, (partnership) => partnership.movies, { nullable: false })
-  @Field(() => Partnership)
-  partnership: Partnership; // Linked to Partnership
+  @ManyToMany(() => Partnership, (partnership) => partnership.movies)
+  @JoinTable()  // Defines the owning side of the relationship
+  @Field(() => [Partnership])
+  partnerships: Partnership[];
 }

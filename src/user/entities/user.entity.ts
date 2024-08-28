@@ -29,10 +29,6 @@ export class User {
   @Field(() => Int)
   points: number;
 
-  @ManyToOne(() => Partnership, (partnership) => partnership.users, { nullable: true })
-  @Field(() => Partnership, { nullable: true })
-  partnership?: Partnership;
-
   @OneToMany(() => Fact, (fact) => fact.user)
   @Field(() => [Fact])
   facts: Fact[];
@@ -48,4 +44,12 @@ export class User {
   @OneToMany(() => Activity, (activity) => activity.user)
   @Field(() => [Activity], { nullable: true })
   activities?: Activity[];
+
+  @OneToMany(() => Partnership, (partnership) => partnership.user1)
+  @Field(() => [Partnership], { nullable: true })
+  partnershipsAsUser1?: Partnership[];
+
+  @OneToMany(() => Partnership, (partnership) => partnership.user2)
+  @Field(() => [Partnership], { nullable: true })
+  partnershipsAsUser2?: Partnership[];
 }

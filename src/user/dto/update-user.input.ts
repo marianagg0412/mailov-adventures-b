@@ -27,3 +27,6 @@ export class UpdateUserInput {
   @IsInt()
   points?: number;
 }
+
+// @InputType()
+// export class UpdateUserInput extends PartialType(CreateUserInput) {}

@@ -1,10 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, JoinTable, ManyToMany } from 'typeorm';
 import { ObjectType, Field, ID, Int } from '@nestjs/graphql';
 import { User } from '../../user/entities/user.entity';
 import { Pet } from '../../pet/entities/pet.entity';
 import { Restaurant } from '../../restaurant/entities/restaurant.entity';
 import { Question } from '../../question/entities/question.entity';
-import { Movie } from '../../movie/entities/movie.entity';  // Make sure this path is correct
+import { Movie } from '../../movie/entities/movie.entity'; 
 import { DateIdea } from 'src/date-idea/entities/date-idea.entity';
 import { Activity } from 'src/activity/entities/activity.entity';
 
@@ -15,11 +15,11 @@ export class Partnership {
   @Field(() => ID)
   id: number;
 
-  @ManyToOne(() => User, (user) => user.partnership, { nullable: false })
+  @ManyToOne(() => User, (user) => user.partnershipsAsUser1, { nullable: false })
   @Field(() => User)
   user1: User;
 
-  @ManyToOne(() => User, (user) => user.partnership, { nullable: false })
+  @ManyToOne(() => User, (user) => user.partnershipsAsUser2, { nullable: false })
   @Field(() => User)
   user2: User;
 
@@ -27,7 +27,7 @@ export class Partnership {
   @Field()
   startDate: string;
 
-  @Column({ default: 'active' }) // Default status value
+  @Column({ default: 'active' }) 
   @Field()
   status: string;
 
@@ -39,28 +39,28 @@ export class Partnership {
   @Field(() => [Pet], { nullable: true })
   pets?: Pet[];
 
-  @OneToMany(() => User, (user) => user.partnership)
-  @Field(() => [User], { nullable: true })
-  users?: User[];
-
-  @OneToMany(() => Question, (question) => question.partnership)
+  @ManyToMany(() => Question, (question) => question.partnerships)
+  @JoinTable()
   @Field(() => [Question], { nullable: true })
   questions?: Question[];
 
-  @OneToMany(() => Restaurant, (restaurant) => restaurant.partnership)
+  @ManyToMany(() => Restaurant, (restaurant) => restaurant.partnerships)
+  @JoinTable()
   @Field(() => [Restaurant], { nullable: true })
   restaurants?: Restaurant[];
 
-  @OneToMany(() => Movie, (movie) => movie.partnership)
+  @ManyToMany(() => Movie, (movie) => movie.partnerships)
+  @JoinTable()
   @Field(() => [Movie], { nullable: true })
   movies?: Movie[];
 
-  @OneToMany(() => DateIdea, (dateIdea) => dateIdea.partnership)
+  @ManyToMany(() => DateIdea, (dateIdea) => dateIdea.partnerships)
+  @JoinTable()
   @Field(() => [DateIdea], { nullable: true })
   dateIdeas?: DateIdea[];
 
-  @OneToMany(() => Activity, (activity) => activity.partnership)
+  @ManyToMany(() => Activity, (activity) => activity.partnerships)
+  @JoinTable()
   @Field(() => [Activity], { nullable: true })
   activities?: Activity[];
-
 }

@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinTable, ManyToMany } from 'typeorm';
 import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
 import { User } from '../../user/entities/user.entity';
 import { Partnership } from '../../partnership/entities/partnership.entity';
@@ -38,7 +38,8 @@ export class DateIdea {
   @Field()
   done: boolean;
 
-  @ManyToOne(() => Partnership, (partnership) => partnership.dateIdeas, { nullable: true })
-  @Field(() => Partnership, { nullable: true })
-  partnership?: Partnership;  // Executed by partnership
+  @ManyToMany(() => Partnership, (partnership) => partnership.dateIdeas)
+  @JoinTable()  // Defines the owning side of the relationship
+  @Field(() => [Partnership])
+  partnerships: Partnership[];  // Executed by partnership
 }

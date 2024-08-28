@@ -31,3 +31,7 @@ export class UpdateQuestionInput {
   @IsInt()
   partnershipId?: number;
 }
+
+// @InputType()
+// export class UpdateQuestionInput extends PartialType(CreateQuestionInput){}
+
