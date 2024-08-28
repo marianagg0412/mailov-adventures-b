@@ -94,6 +94,7 @@ export class ActivityService {
       if (partnerships.length !== partnershipIds.length) {
         throw new NotFoundException(`Some partnerships with IDs ${partnershipIds} not found.`);
       }
+      activity.partnerships = partnerships;
     }
     this.activityRepository.merge(activity, rest);
     return this.activityRepository.save(activity);
