@@ -6,37 +6,23 @@ import { UserService } from '../user/user.service';
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly usersService: UserService // Inject the UsersService to fetch user details
+    private readonly userService: UserService
   ) {}
 
-  // async validateToken(token: string): Promise<any> {
-  //   try {
-  //     const tokenPayload = await this.jwtService.verifyAsync(token);
-  //     console.log("dddd");
-  //     console.log(tokenPayload);
-  //     return tokenPayload;
-  //   } catch (error) {
-  //     return null;
-  //   }
-  // }
+  async validateToken(token: string): Promise<any> {
+    try {
+      const payload = await this.jwtService.verifyAsync(token);
+      return payload;
+    } catch (error) {
+      return null;
+    }
+  }
 
-  // async login(user: any): Promise<{ accessToken: string }> {
-  //   const userFromDb = await this.usersService.findOne(user.userId); // Ensure this fetches the correct user
-    
-  //   console.log(userFromDb);
-  //   const payload = {
-  //     username: userFromDb.email, // Make sure this is accurate
-  //     sub: userFromDb.id, // Ensure this matches your user ID
-  //     roles: userFromDb.roles.map(role => role.name), // Ensure role names are correctly mapped
-  //   };
-  //   console.log("bbb");
-  //   console.log(payload);
-  //   console.log("cccc");
-  //   console.log(payload.roles);
-  
-  //   return {
-  //     accessToken: this.jwtService.sign(payload),
-  //   };
-  // }
-  
+  async login(user: any): Promise<{ accessToken: string }> {
+    const userFromDb = await this.userService.findOne(user.userId);
+    const payload = { sub: userFromDb.id };
+    return {
+      accessToken: this.jwtService.sign(payload),
+    };
+  }
 }

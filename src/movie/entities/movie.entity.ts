@@ -22,7 +22,6 @@ export class Movie {
   priority: string;
 
   @ManyToMany(() => Partnership, (partnership) => partnership.movies)
-  @JoinTable()  // Defines the owning side of the relationship
   @Field(() => [Partnership])
   partnerships: Partnership[];
 }

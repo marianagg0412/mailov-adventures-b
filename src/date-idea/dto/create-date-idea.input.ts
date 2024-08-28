@@ -32,8 +32,7 @@ export class CreateDateIdeaInput {
   @IsInt()
   userId: number;  // Proposed by user
 
-  @Field(() => Int, { nullable: true })
-  @IsOptional()
+  @Field(() => Int, { nullable: false })
   @IsInt()
-  partnershipId?: number;  // Executed by partnership (optional)
+  partnershipId: number;  // Executed by partnership (optional)
 }

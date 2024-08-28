@@ -22,5 +22,9 @@ export class CreateQuestionInput {
 
   @Field(() => Int)
   @IsInt()
+  userId: number;
+
+  @Field(() => Int)
+  @IsInt()
   partnershipId: number;  // Linked to Partnership
 }

@@ -13,7 +13,7 @@ export class ActivityResolver {
     return this.activityService.create(createActivityInput);
   }
 
-  @Query(() => [Activity], { name: 'activity' })
+  @Query(() => [Activity], { name: 'activities' })
   findAll() {
     return this.activityService.findAll();
   }

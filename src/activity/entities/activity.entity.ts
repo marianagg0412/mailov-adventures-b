@@ -27,7 +27,6 @@ export class Activity {
   user: User;
 
   @ManyToMany(() => Partnership, (partnership) => partnership.activities)
-  @JoinTable()  // Defines the owning side of the relationship
   @Field(() => [Partnership])
   partnerships: Partnership[];  // Executed by partnership
 }

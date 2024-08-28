@@ -1,10 +1,10 @@
 import { InputType, Field, ID, Int } from '@nestjs/graphql';
-import { IsString, IsOptional, IsBoolean, IsInt } from 'class-validator';
+import { IsString, IsOptional, IsBoolean, IsInt, IsArray } from 'class-validator';
 
 @InputType()
 export class UpdateRestaurantInput {
-  @Field(() => ID)
-  id: number;
+  // @Field(() => Int)
+  // id: number;
 
   @Field({ nullable: true })
   @IsOptional()
@@ -36,11 +36,8 @@ export class UpdateRestaurantInput {
   @IsBoolean()
   visited?: boolean;
 
-  @Field(() => Int, { nullable: true })
+  @Field(() => [Int], { nullable: true })
   @IsOptional()
-  @IsInt()
-  partnershipId?: number;
+  @IsArray()
+  partnershipIds?: number[];
 }
-
-// @InputType()
-// export class UpdateRestaurantInput extends PartialType(CreateRestaurantInput) {}

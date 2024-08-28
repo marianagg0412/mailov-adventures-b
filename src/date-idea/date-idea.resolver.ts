@@ -13,7 +13,7 @@ export class DateIdeaResolver {
     return this.dateIdeaService.create(createDateIdeaInput);
   }
 
-  @Query(() => [DateIdea], { name: 'dateIdea' })
+  @Query(() => [DateIdea], { name: 'dateIdeas' })
   findAll() {
     return this.dateIdeaService.findAll();
   }

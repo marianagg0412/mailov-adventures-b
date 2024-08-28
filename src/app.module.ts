@@ -13,6 +13,9 @@ import { MovieModule } from './movie/movie.module';
 import { PartnershipModule } from './partnership/partnership.module';
 import { ConfigModule } from '@nestjs/config';
 import {TypeOrmModule} from '@nestjs/typeorm';
+import { AuthModule } from './Auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './Auth/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -49,6 +52,9 @@ import {TypeOrmModule} from '@nestjs/typeorm';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      context: ({ req }) => ({
+        headers: req.headers,
+      }),
     }),
     UserModule,
     FactModule,
@@ -59,6 +65,13 @@ import {TypeOrmModule} from '@nestjs/typeorm';
     RestaurantModule,
     MovieModule,
     PartnershipModule,
+    AuthModule,
   ],
+  providers:[
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    }
+  ]
 })
 export class AppModule {}

@@ -1,5 +1,5 @@
 import { InputType, Field, Int } from '@nestjs/graphql';
-import { IsString, IsBoolean, IsInt } from 'class-validator';
+import { IsString, IsInt, IsOptional, IsArray } from 'class-validator';
 
 @InputType()
 export class CreateRestaurantInput {
@@ -15,19 +15,13 @@ export class CreateRestaurantInput {
   @IsString()
   cuisineType: string;
 
-  @Field()
+  @Field({ nullable: true })
   @IsString()
-  dateAdded: string;
+  @IsOptional()
+  extra?: string;
 
-  @Field()
-  @IsString()
-  extra: string;
-
-  @Field()
-  @IsBoolean()
-  visited: boolean;
-
-  @Field(() => Int)
-  @IsInt()
-  partnershipId: number;  // Linked to Partnership
+  @Field(() => [Int], { nullable: true })
+  @IsArray()
+  @IsOptional()
+  partnershipIds?: number[];
 }

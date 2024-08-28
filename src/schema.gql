@@ -8,18 +8,23 @@ type Pet {
   type: String!
   hungerLevel: Int!
   happinessLevel: Int!
-  lastFed: String!
+  lastFed: DateTime!
   partnership: Partnership!
 }
 
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Restaurant {
-  id: ID!
-  partnerships: [Partnership!]!
+  id: Int!
+  partnerships: [Partnership]!
   name: String!
   location: String!
   cuisineType: String!
   dateAdded: String!
-  extra: String!
+  extra: String
   visited: Boolean!
 }
 
@@ -99,22 +104,34 @@ type User {
   partnershipsAsUser2: [Partnership!]
 }
 
+type AuthResponseDto {
+  accessToken: String!
+}
+
 type Query {
-  user(id: Int!): User!
+  findAllUsers: [User!]!
+  findUserById(id: Int!): User!
   fact(id: Int!): Fact!
+  dateIdeas: [DateIdea!]!
   dateIdea(id: Int!): DateIdea!
+  questions: [Question!]!
   question(id: Int!): Question!
+  pets: [Pet!]!
   pet(id: Int!): Pet!
+  activities: [Activity!]!
   activity(id: Int!): Activity!
+  restaurants: [Restaurant!]!
   restaurant(id: Int!): Restaurant!
+  movies: [Movie!]!
   movie(id: Int!): Movie!
-  partnership(id: Int!): Partnership!
+  getPartnerships: [Partnership!]!
+  getOnePartnership(id: ID!): Partnership!
 }
 
 type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
-  removeUser(id: Int!): User!
+  removeUser(id: Int!): Boolean!
   createFact(createFactInput: CreateFactInput!): Fact!
   updateFact(updateFactInput: UpdateFactInput!): Fact!
   removeFact(id: Int!): Fact!
@@ -123,7 +140,7 @@ type Mutation {
   removeDateIdea(id: Int!): DateIdea!
   createQuestion(createQuestionInput: CreateQuestionInput!): Question!
   updateQuestion(updateQuestionInput: UpdateQuestionInput!): Question!
-  removeQuestion(id: Int!): Question!
+  removeQuestion(id: Int!): Boolean!
   createPet(createPetInput: CreatePetInput!): Pet!
   updatePet(updatePetInput: UpdatePetInput!): Pet!
   removePet(id: Int!): Pet!
@@ -131,14 +148,16 @@ type Mutation {
   updateActivity(updateActivityInput: UpdateActivityInput!): Activity!
   removeActivity(id: Int!): Activity!
   createRestaurant(createRestaurantInput: CreateRestaurantInput!): Restaurant!
-  updateRestaurant(updateRestaurantInput: UpdateRestaurantInput!): Restaurant!
-  removeRestaurant(id: Int!): Restaurant!
+  updateRestaurant(id: Int!, updateRestaurantInput: UpdateRestaurantInput!): Restaurant!
+  removeRestaurant(id: Int!): Boolean!
   createMovie(createMovieInput: CreateMovieInput!): Movie!
   updateMovie(updateMovieInput: UpdateMovieInput!): Movie!
   removeMovie(id: Int!): Movie!
   createPartnership(createPartnershipInput: CreatePartnershipInput!): Partnership!
-  updatePartnership(updatePartnershipInput: UpdatePartnershipInput!): Partnership!
-  removePartnership(id: Int!): Partnership!
+  updatePartnership(id: ID!, updatePartnershipInput: UpdatePartnershipInput!): Partnership!
+  removePartnership(id: Int!): Boolean!
+  login(input: LoginDto!): AuthResponseDto!
+  validate(token: String!): Boolean!
 }
 
 input CreateUserInput {
@@ -179,7 +198,7 @@ input CreateDateIdeaInput {
   enthusiasm: Int!
   done: Boolean!
   userId: Int!
-  partnershipId: Int
+  partnershipId: Int!
 }
 
 input UpdateDateIdeaInput {
@@ -199,6 +218,7 @@ input CreateQuestionInput {
   category: String!
   answer: String
   dateAsked: String!
+  userId: Int!
   partnershipId: Int!
 }
 
@@ -216,7 +236,7 @@ input CreatePetInput {
   type: String!
   hungerLevel: Int!
   happinessLevel: Int!
-  lastFed: String!
+  lastFed: DateTime!
   partnershipId: Float!
 }
 
@@ -226,7 +246,7 @@ input UpdatePetInput {
   type: String
   hungerLevel: Int
   happinessLevel: Int
-  lastFed: String
+  lastFed: DateTime
   partnershipId: Int!
 }
 
@@ -251,21 +271,18 @@ input CreateRestaurantInput {
   name: String!
   location: String!
   cuisineType: String!
-  dateAdded: String!
-  extra: String!
-  visited: Boolean!
-  partnershipId: Int!
+  extra: String
+  partnershipIds: [Int!]
 }
 
 input UpdateRestaurantInput {
-  id: ID!
   name: String
   location: String
   cuisineType: String
   dateAdded: String
   extra: String
   visited: Boolean
-  partnershipId: Int
+  partnershipIds: [Int!]
 }
 
 input CreateMovieInput {
@@ -286,15 +303,17 @@ input UpdateMovieInput {
 input CreatePartnershipInput {
   user1Id: Int!
   user2Id: Int!
-  startDate: String!
-  status: String!
 }
 
 input UpdatePartnershipInput {
-  id: ID!
   user1Id: Int
   user2Id: Int
   startDate: String
   status: String
   sharedPoints: Int
+}
+
+input LoginDto {
+  email: String!
+  password: String!
 }

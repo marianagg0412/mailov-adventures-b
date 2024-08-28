@@ -10,12 +10,4 @@ export class CreatePartnershipInput {
   @Field(() => Int)
   @IsInt()
   user2Id: number;
-
-  @Field()
-  @IsString()
-  startDate: string;
-
-  @Field({ nullable: false })
-  @IsString()
-  status: string;
 }

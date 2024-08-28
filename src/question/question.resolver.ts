@@ -9,27 +9,32 @@ export class QuestionResolver {
   constructor(private readonly questionService: QuestionService) {}
 
   @Mutation(() => Question)
-  createQuestion(@Args('createQuestionInput') createQuestionInput: CreateQuestionInput) {
+  async createQuestion(
+    @Args('createQuestionInput') createQuestionInput: CreateQuestionInput
+  ): Promise<Question> {
     return this.questionService.create(createQuestionInput);
   }
 
-  @Query(() => [Question], { name: 'question' })
-  findAll() {
+  @Query(() => [Question], { name: 'questions' })
+  async findAll(): Promise<Question[]> {
     return this.questionService.findAll();
   }
 
   @Query(() => Question, { name: 'question' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  async findOne(@Args('id', { type: () => Int }) id: number): Promise<Question> {
     return this.questionService.findOne(id);
   }
 
   @Mutation(() => Question)
-  updateQuestion(@Args('updateQuestionInput') updateQuestionInput: UpdateQuestionInput) {
+  async updateQuestion(
+    @Args('updateQuestionInput') updateQuestionInput: UpdateQuestionInput
+  ): Promise<Question> {
     return this.questionService.update(updateQuestionInput.id, updateQuestionInput);
   }
 
-  @Mutation(() => Question)
-  removeQuestion(@Args('id', { type: () => Int }) id: number) {
-    return this.questionService.remove(id);
+  @Mutation(() => Boolean)
+  async removeQuestion(@Args('id', { type: () => Int }) id: number): Promise<boolean> {
+    await this.questionService.remove(id);
+    return true;
   }
 }

@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, JoinTable, ManyToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, JoinTable, ManyToMany, CreateDateColumn } from 'typeorm';
 import { ObjectType, Field, ID, Int } from '@nestjs/graphql';
 import { User } from '../../user/entities/user.entity';
 import { Pet } from '../../pet/entities/pet.entity';
@@ -23,9 +23,9 @@ export class Partnership {
   @Field(() => User)
   user2: User;
 
-  @Column()
-  @Field()
-  startDate: string;
+  @CreateDateColumn({ type: 'timestamp' }) // Automatically set the current date and time
+  @Field(() => String) // or use Date type if you prefer
+  startDate: Date;
 
   @Column({ default: 'active' }) 
   @Field()
@@ -45,7 +45,7 @@ export class Partnership {
   questions?: Question[];
 
   @ManyToMany(() => Restaurant, (restaurant) => restaurant.partnerships)
-  @JoinTable()
+  @JoinTable()  // Defines the owning side of the relationship
   @Field(() => [Restaurant], { nullable: true })
   restaurants?: Restaurant[];
 

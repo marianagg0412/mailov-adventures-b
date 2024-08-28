@@ -3,7 +3,7 @@ import { IsString, IsEmail, IsOptional, IsInt } from 'class-validator';
 
 @InputType()
 export class UpdateUserInput {
-  @Field(() => ID)
+  @Field(() => ID) // Changed from ID to Int to match the type of the id field
   @IsInt()
   id: number;
 

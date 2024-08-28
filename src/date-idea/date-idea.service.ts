@@ -1,26 +1,88 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { DateIdea } from './entities/date-idea.entity';
 import { CreateDateIdeaInput } from './dto/create-date-idea.input';
 import { UpdateDateIdeaInput } from './dto/update-date-idea.input';
+import { User } from '../user/entities/user.entity';
+import { Partnership } from '../partnership/entities/partnership.entity';
 
 @Injectable()
 export class DateIdeaService {
-  create(createDateIdeaInput: CreateDateIdeaInput) {
-    return 'This action adds a new dateIdea';
+  constructor(
+    @InjectRepository(DateIdea)
+    private dateIdeaRepository: Repository<DateIdea>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+    @InjectRepository(Partnership)
+    private partnershipRepository: Repository<Partnership>,
+  ) {}
+
+  async create(createDateIdeaInput: CreateDateIdeaInput): Promise<DateIdea> {
+    const { userId, partnershipId, ...rest } = createDateIdeaInput;
+
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userId} not found.`);
+    }
+
+    const partnership = partnershipId
+      ? await this.partnershipRepository.findOne({ where: { id: partnershipId } })
+      : null;
+
+    if (partnershipId && !partnership) {
+      throw new NotFoundException(`Partnership with ID ${partnershipId} not found.`);
+    }
+
+    const dateIdea = this.dateIdeaRepository.create({
+      ...rest,
+      user,
+      partnerships: partnership ? [partnership] : [],
+    });
+
+    return this.dateIdeaRepository.save(dateIdea);
   }
 
-  findAll() {
-    return `This action returns all dateIdea`;
+  async findAll(): Promise<DateIdea[]> {
+    return this.dateIdeaRepository.find({ relations: ['user', 'partnerships'] });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} dateIdea`;
+  async findOne(id: number): Promise<DateIdea> {
+    const dateIdea = await this.dateIdeaRepository.findOne({
+      where: { id },
+      relations: ['user', 'partnerships'],
+    });
+
+    if (!dateIdea) {
+      throw new NotFoundException(`DateIdea with ID ${id} not found.`);
+    }
+
+    return dateIdea;
   }
 
-  update(id: number, updateDateIdeaInput: UpdateDateIdeaInput) {
-    return `This action updates a #${id} dateIdea`;
+  async update(id: number, updateDateIdeaInput: UpdateDateIdeaInput): Promise<DateIdea> {
+    const dateIdea = await this.dateIdeaRepository.preload({
+      id,
+      ...updateDateIdeaInput,
+    });
+
+    if (!dateIdea) {
+      throw new NotFoundException(`DateIdea with ID ${id} not found.`);
+    }
+
+    return this.dateIdeaRepository.save(dateIdea);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} dateIdea`;
+  async remove(id: number): Promise<void> {
+    const dateIdea = await this.findOne(id);
+    if (!dateIdea) {
+      throw new NotFoundException(`DateIdea with ID ${id} not found.`);
+    }
+
+    try {
+      await this.dateIdeaRepository.remove(dateIdea);
+    } catch (error) {
+      throw new BadRequestException(`Failed to remove DateIdea with ID ${id}.`);
+    }
   }
 }

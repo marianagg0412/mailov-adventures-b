@@ -16,16 +16,16 @@ async function bootstrap() {
     }
   ));
 
-  //swagger
-  const config = new DocumentBuilder()
-    .setTitle('API documentation')
-    .setDescription('The API description :D')
-    .setVersion('0.1')
-    .addTag('App') // This matches the ApiTags('App') in your controller
-    .build();
+  // //swagger
+  // const config = new DocumentBuilder()
+  //   .setTitle('API documentation')
+  //   .setDescription('The API description :D')
+  //   .setVersion('0.1')
+  //   .addTag('App') // This matches the ApiTags('App') in your controller
+  //   .build();
   
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  // const document = SwaggerModule.createDocument(app, config);
+  // SwaggerModule.setup('api', app, document);
 
   //cors
   const configService = app.get(ConfigService);

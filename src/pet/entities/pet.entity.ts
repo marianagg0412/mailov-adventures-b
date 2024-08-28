@@ -25,9 +25,9 @@ export class Pet {
   @Field(() => Int)
   happinessLevel: number;
 
-  @Column()
+  @Column({ type: 'timestamptz' })
   @Field()
-  lastFed: string;
+  lastFed: Date;
 
   @ManyToOne(() => Partnership, (partnership) => partnership.pets)
   @Field(() => Partnership)

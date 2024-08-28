@@ -9,27 +9,33 @@ export class RestaurantResolver {
   constructor(private readonly restaurantService: RestaurantService) {}
 
   @Mutation(() => Restaurant)
-  createRestaurant(@Args('createRestaurantInput') createRestaurantInput: CreateRestaurantInput) {
+  async createRestaurant(
+    @Args('createRestaurantInput') createRestaurantInput: CreateRestaurantInput
+  ): Promise<Restaurant> {
     return this.restaurantService.create(createRestaurantInput);
   }
 
-  @Query(() => [Restaurant], { name: 'restaurant' })
-  findAll() {
+  @Query(() => [Restaurant], { name: 'restaurants' })
+  async findAll(): Promise<Restaurant[]> {
     return this.restaurantService.findAll();
   }
 
   @Query(() => Restaurant, { name: 'restaurant' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  async findOne(@Args('id', { type: () => Int }) id: number): Promise<Restaurant> {
     return this.restaurantService.findOne(id);
   }
 
   @Mutation(() => Restaurant)
-  updateRestaurant(@Args('updateRestaurantInput') updateRestaurantInput: UpdateRestaurantInput) {
-    return this.restaurantService.update(updateRestaurantInput.id, updateRestaurantInput);
+  async updateRestaurant(
+    @Args('id', { type: () => Int }) id: number, //Id restaurant
+    @Args('updateRestaurantInput') updateRestaurantInput: UpdateRestaurantInput //Inside, ids partnerships
+  ): Promise<Restaurant> {
+    return this.restaurantService.update(id, updateRestaurantInput);
   }
 
-  @Mutation(() => Restaurant)
-  removeRestaurant(@Args('id', { type: () => Int }) id: number) {
-    return this.restaurantService.remove(id);
+  @Mutation(() => Boolean)
+  async removeRestaurant(@Args('id', { type: () => Int }) id: number): Promise<boolean> {
+    await this.restaurantService.remove(id);
+    return true;
   }
 }

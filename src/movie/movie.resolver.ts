@@ -13,7 +13,7 @@ export class MovieResolver {
     return this.movieService.create(createMovieInput);
   }
 
-  @Query(() => [Movie], { name: 'movie' })
+  @Query(() => [Movie], { name: 'movies' })
   findAll() {
     return this.movieService.findAll();
   }

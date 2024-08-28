@@ -31,7 +31,6 @@ export class Question {
   dateAsked: string;
 
   @ManyToMany(() => Partnership, (partnership) => partnership.questions)
-  @JoinTable()  // Defines the owning side of the relationship
   @Field(() => [Partnership])
   partnerships: Partnership[];  // Related to partnership
 }

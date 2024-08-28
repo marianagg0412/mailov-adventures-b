@@ -1,11 +1,8 @@
 import { InputType, Field, ID, Int } from '@nestjs/graphql';
-import { IsString, IsOptional, IsInt } from 'class-validator';
+import { IsString, IsOptional, IsInt, IsDate } from 'class-validator';
 
 @InputType()
 export class UpdatePartnershipInput {
-  @Field(() => ID)
-  id: number;
-
   @Field(() => Int, { nullable: true })
   @IsOptional()
   @IsInt()
@@ -18,7 +15,7 @@ export class UpdatePartnershipInput {
 
   @Field({ nullable: true })
   @IsOptional()
-  @IsString()
+  @IsDate()
   startDate?: string;
 
   @Field({ nullable: true })

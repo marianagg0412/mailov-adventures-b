@@ -1,5 +1,5 @@
 import { InputType, Field, Int } from '@nestjs/graphql';
-import { IsString, IsInt } from 'class-validator';
+import { IsString, IsInt, IsDate } from 'class-validator';
 
 @InputType()
 export class CreatePetInput {
@@ -20,8 +20,8 @@ export class CreatePetInput {
   happinessLevel: number;
 
   @Field()
-  @IsString()
-  lastFed: string;
+  @IsDate()
+  lastFed: Date;
 
   @Field()
   @IsInt()

@@ -1,20 +1,18 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinTable, ManyToMany } from 'typeorm';
-import { ObjectType, Field, ID } from '@nestjs/graphql';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinTable, ManyToMany, CreateDateColumn } from 'typeorm';
+import { ObjectType, Field, ID, Int } from '@nestjs/graphql';
 import { Partnership } from '../../partnership/entities/partnership.entity';
 
 @Entity()
 @ObjectType()
 export class Restaurant {
   @PrimaryGeneratedColumn()
-  @Field(() => ID)
+  @Field(() => Int)
   id: number;
 
   @ManyToMany(() => Partnership, (partnership) => partnership.restaurants)
-  @JoinTable()  // Defines the owning side of the relationship
-  @Field(() => [Partnership])
-  partnerships: Partnership[];
+  @Field(() => [Partnership], { nullable: 'items' })
+  partnerships?: Partnership[];
 
-  
   @Column()
   @Field()
   name: string;
@@ -27,15 +25,15 @@ export class Restaurant {
   @Field()
   cuisineType: string;
 
-  @Column()
+  @CreateDateColumn({ type: 'timestamp' })
   @Field()
   dateAdded: string;
 
-  @Column()
-  @Field()
-  extra: string; // Extra information
+  @Column({ default: '', nullable: true }) // Allow null values
+  @Field({ nullable: true })
+  extra?: string;
 
-  @Column()
+  @Column({ default: false })
   @Field()
   visited: boolean;
 }

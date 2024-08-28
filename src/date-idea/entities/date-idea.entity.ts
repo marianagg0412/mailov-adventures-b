@@ -34,12 +34,11 @@ export class DateIdea {
   @Field(() => Int)
   enthusiasm: number;
 
-  @Column()
+  @Column({ default: false })
   @Field()
   done: boolean;
 
   @ManyToMany(() => Partnership, (partnership) => partnership.dateIdeas)
-  @JoinTable()  // Defines the owning side of the relationship
   @Field(() => [Partnership])
   partnerships: Partnership[];  // Executed by partnership
 }
