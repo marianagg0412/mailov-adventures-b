@@ -30,15 +30,21 @@ export class PartnershipResolver {
   ) {
     return this.partnershipService.update(id, updatePartnershipInput);
   }
+
+  @Query(() => [Partnership], { name: 'getUserPartnershipDetails' })
+  async getUserPartnershipDetails(@Args('userId', { type: () => Int }) userId: number): Promise<Partnership[]> {
+    return this.partnershipService.getUserPartnershipDetails(userId);
+  }
+  
   
 
   @Mutation(() => Boolean)
   async removePartnership(@Args('id', { type: () => Int }) id: number) {
     try {
-      await this.partnershipService.remove(id);
+      await this.partnershipService.remove(id, 'inactive');
       return true;
     } catch (error) {
-      return false; // Optionally handle error or throw
+      return false; 
     }
   }
 }

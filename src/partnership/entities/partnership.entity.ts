@@ -54,12 +54,12 @@ export class Partnership {
   @Field(() => [Movie], { nullable: true })
   movies?: Movie[];
 
-  @ManyToMany(() => DateIdea, (dateIdea) => dateIdea.partnerships)
+  @ManyToMany(() => DateIdea, (dateIdea) => dateIdea.partnershipIds)
   @JoinTable()
   @Field(() => [DateIdea], { nullable: true })
   dateIdeas?: DateIdea[];
 
-  @ManyToMany(() => Activity, (activity) => activity.partnerships)
+  @ManyToMany(() => Activity, (activity) => activity.partnershipIds)
   @JoinTable()
   @Field(() => [Activity], { nullable: true })
   activities?: Activity[];

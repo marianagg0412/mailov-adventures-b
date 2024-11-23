@@ -5,6 +5,7 @@ import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.estrategy';
 import { AuthResolver } from './auth.resolver';
 import { UserModule } from '../user/user.module';  // Import UserModule
+import { PasswordService } from './security/PasswordService';
 
 @Global()
 @Module({
@@ -19,7 +20,7 @@ import { UserModule } from '../user/user.module';  // Import UserModule
     }),
     UserModule,  // Import UserModule to make UserService available
   ],
-  providers: [AuthService, JwtStrategy, AuthResolver],
+  providers: [AuthService, JwtStrategy, AuthResolver, PasswordService],
   exports: [AuthService, JwtModule],
 })
 export class AuthModule {}

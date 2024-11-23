@@ -9,10 +9,10 @@ export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
   @Mutation(() => AuthResponseDto)
-  @Public()
+  @Public() // Public decorator allows access without authentication
   async login(@Args('input') input: LoginDto): Promise<AuthResponseDto> {
-    const { accessToken } = await this.authService.login(input);
-    return { accessToken };
+    const { accessToken, userId } = await this.authService.login(input);
+    return { accessToken, userId }; // Return access token containing userId
   }
 
   @Mutation(() => Boolean)

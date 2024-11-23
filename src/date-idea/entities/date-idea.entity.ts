@@ -40,5 +40,5 @@ export class DateIdea {
 
   @ManyToMany(() => Partnership, (partnership) => partnership.dateIdeas)
   @Field(() => [Partnership])
-  partnerships: Partnership[];  // Executed by partnership
+  partnershipIds: Partnership[];  // Executed by partnership
 }

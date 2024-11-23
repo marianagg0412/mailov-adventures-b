@@ -18,6 +18,11 @@ export class ActivityResolver {
     return this.activityService.findAll();
   }
 
+  @Query(() => [Activity], { name: 'activitiesForPartnership' })
+  findActivitiesByPartnership(@Args('partnershipId', { type: () => Int }) partnershipId: number) {
+    return this.activityService.findByPartnership(partnershipId);
+  }
+
   @Query(() => Activity, { name: 'activity' })
   findOne(@Args('id', { type: () => Int }) id: number) {
     return this.activityService.findOne(id);

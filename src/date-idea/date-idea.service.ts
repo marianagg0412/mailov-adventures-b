@@ -39,21 +39,30 @@ export class DateIdeaService {
     const dateIdea = this.dateIdeaRepository.create({
       ...rest,
       user,
-      partnerships,
+      partnershipIds: partnerships,
     });
   
     return this.dateIdeaRepository.save(dateIdea);
   }
+
+  async findByPartnership(partnershipId: number): Promise<DateIdea[]> {
+    return this.dateIdeaRepository
+      .createQueryBuilder('dateIdea')
+      .leftJoinAndSelect('dateIdea.partnershipIds', 'partnership')
+      .leftJoinAndSelect('dateIdea.user', 'user') // Add this to join user if needed
+      .where('partnership.id = :partnershipId', { partnershipId })
+      .getMany();
+  }
   
 
   async findAll(): Promise<DateIdea[]> {
-    return this.dateIdeaRepository.find({ relations: ['user', 'partnerships'] });
+    return this.dateIdeaRepository.find({ relations: ['user', 'partnershipIds'] });
   }
 
   async findOne(id: number): Promise<DateIdea> {
     const dateIdea = await this.dateIdeaRepository.findOne({
       where: { id },
-      relations: ['user', 'partnerships'],
+      relations: ['user', 'partnershipIds'],
     });
 
     if (!dateIdea) {
@@ -66,7 +75,7 @@ export class DateIdeaService {
   async update(id: number, updateDateIdeaInput: UpdateDateIdeaInput): Promise<DateIdea> {
     const dateIdea = await this.dateIdeaRepository.findOne({
       where: { id },
-      relations: ['user', 'partnerships'], // Ensure related entities are loaded
+      relations: ['user', 'partnershipIds'], // Ensure related entities are loaded
     });
 
     if (!dateIdea) {
@@ -91,7 +100,7 @@ export class DateIdeaService {
       if (invalidPartnershipIds.length > 0) {
         throw new NotFoundException(`Partnership(s) with ID(s) ${invalidPartnershipIds.join(', ')} not found.`);
       }
-      dateIdea.partnerships = partnerships;
+      dateIdea.partnershipIds = partnerships;
     }
 
     // Merge the rest of the updates from updateDateIdeaInput into the found dateIdea

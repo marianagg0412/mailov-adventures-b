@@ -19,7 +19,7 @@ export class Activity {
   pointsEarned: number;
 
   @Column({nullable: true})
-  @Field()
+  @Field({nullable: true})
   date?: string;
 
   @ManyToOne(() => User, (user) => user.activities)
@@ -28,5 +28,5 @@ export class Activity {
 
   @ManyToMany(() => Partnership, (partnership) => partnership.activities)
   @Field(() => [Partnership])
-  partnerships: Partnership[];  // Executed by partnership
+  partnershipIds: Partnership[];  // Executed by partnership
 }

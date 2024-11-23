@@ -40,22 +40,29 @@ export class ActivityService {
     const activity = this.activityRepository.create({
       ...rest,
       user,
-      partnerships,
+      partnershipIds: partnerships,
     });
   
     return this.activityRepository.save(activity);
   }
   
-  
+  async findByPartnership(partnershipId: number): Promise<Activity[]> {
+    return this.activityRepository
+      .createQueryBuilder('activity')
+      .leftJoinAndSelect('activity.partnershipIds', 'partnership')
+      .leftJoinAndSelect('activity.user', 'user') // Add this to join user if needed
+      .where('partnership.id = :partnershipId', { partnershipId })
+      .getMany();
+  }
 
   async findAll(): Promise<Activity[]> {
-    return this.activityRepository.find({ relations: ['user', 'partnerships'] });
+    return this.activityRepository.find({ relations: ['user', 'partnershipIds'] });
   }
 
   async findOne(id: number): Promise<Activity> {
     const activity = await this.activityRepository.findOne({
       where: { id },
-      relations: ['user', 'partnerships'],
+      relations: ['user', 'partnershipIds'],
     });
 
     if (!activity) {
@@ -70,7 +77,7 @@ export class ActivityService {
   
     const activity = await this.activityRepository.findOne({
       where: { id },
-      relations: ['user', 'partnerships'],
+      relations: ['user', 'partnershipIds'],
     });
   
     if (!activity) {
@@ -85,7 +92,7 @@ export class ActivityService {
       activity.user = user;
     }
     
-    let partnerships = activity.partnerships;
+    let partnerships = activity.partnershipIds;
   
     // If partnershipIds is provided, update the partnerships
     if (partnershipIds && partnershipIds.length > 0) {
@@ -94,7 +101,7 @@ export class ActivityService {
       if (partnerships.length !== partnershipIds.length) {
         throw new NotFoundException(`Some partnerships with IDs ${partnershipIds} not found.`);
       }
-      activity.partnerships = partnerships;
+      activity.partnershipIds = partnerships;
     }
     this.activityRepository.merge(activity, rest);
     return this.activityRepository.save(activity);
@@ -102,7 +109,10 @@ export class ActivityService {
   
 
   async remove(id: number): Promise<void> {
-    const activity = await this.findOne(id);
+    const activity = await this.activityRepository.findOne({
+      where: { id: id },
+      relations: ['partnershipIds'], // Make sure 'partnerships' is included here
+    });
     if (!activity) {
       throw new NotFoundException(`Activity with ID ${id} not found.`);
     }

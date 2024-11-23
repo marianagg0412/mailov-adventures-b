@@ -73,12 +73,33 @@ export class PartnershipService {
     return partnership;
   }
 
-  async remove(id: number): Promise<void> {
-    const result = await this.partnershipRepository.delete(id);
-    if (result.affected === 0) {
-      throw new BadRequestException('Partnership not found.');
+  async remove(id: number, status: string): Promise<boolean> {
+    const partnership = await this.partnershipRepository.findOne({ where: { id } });
+    if (!partnership) {
+      throw new Error('Partnership not found');
+    }
+
+    // Update the status to 'inactive'
+    partnership.status = status;
+
+    try {
+      await this.partnershipRepository.save(partnership);
+      return true;
+    } catch (error) {
+      console.error('Error updating partnership status:', error);
+      return false;
     }
   }
+
+  async getUserPartnershipDetails(userId: number): Promise<Partnership[]> {
+    return this.partnershipRepository
+      .createQueryBuilder('partnership')
+      .leftJoinAndSelect('partnership.user1', 'user1')
+      .leftJoinAndSelect('partnership.user2', 'user2')
+      .where('partnership.user1.id = :userId OR partnership.user2.id = :userId', { userId })
+      .getMany();
+  }
+  
 
   private async validateUserPartnerships(user1Id?: number, user2Id?: number, partnershipId?: number) {
     if (user1Id) {

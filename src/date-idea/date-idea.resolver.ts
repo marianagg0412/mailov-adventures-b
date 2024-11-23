@@ -23,6 +23,11 @@ export class DateIdeaResolver {
     return this.dateIdeaService.findOne(id);
   }
 
+  @Query(() => [DateIdea], { name: 'dateIdeasForPartnership' })
+  findDateIdeasForPartnership(@Args('partnershipId', { type: () => Int }) partnershipId: number) {
+    return this.dateIdeaService.findByPartnership(partnershipId);
+  }
+
   @Mutation(() => DateIdea)
   updateDateIdea(
     @Args('id', { type: () => ID }) id: number,
