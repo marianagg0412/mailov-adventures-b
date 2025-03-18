@@ -29,11 +29,14 @@ import { JwtAuthGuard } from './Auth/jwt-auth.guard';
         const username = process.env.DB_USER;
         const password = process.env.DB_PASSWORD;
         const database = process.env.DB_NAME;
+        const ssl = process.env.DB_SSL === 'true';
     
         Logger.log(`DB Host: ${host}`, 'AppModule');
         Logger.log(`DB Port: ${port}`, 'AppModule');
         Logger.log(`DB User: ${username}`, 'AppModule');
         Logger.log(`DB Database: ${database}`, 'AppModule');
+        Logger.log(`DB SSL Enabled: ${ssl}`, 'AppModule');
+
     
         return {
           type: 'postgres',
@@ -42,6 +45,8 @@ import { JwtAuthGuard } from './Auth/jwt-auth.guard';
           username,
           password,
           database,
+          ssl: ssl ? { rejectUnauthorized: false } : false,
+          extra: ssl ? { ssl: { rejectUnauthorized: false } } : {},
           entities: [__dirname + '/**/*.entity{.ts,.js}'],
           synchronize: true,
           logging: true,
